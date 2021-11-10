@@ -8,6 +8,7 @@ import {
   KeyboardAvoidingView,
   TextInput,
   TouchableOpacity,
+  Keyboard,
 } from "react-native";
 import Task from "./components/Task";
 
@@ -16,8 +17,15 @@ export default function App() {
   const [taskItems, setTaskItems] = useState([]);
 
   const handleAddTask = () => {
+    Keyboard.dismiss();
     setTaskItems([...taskItems, task]);
     setTask("");
+  };
+
+  const deleteTask = (id) => {
+    let items = [...taskItems];
+    items.splice(id, 1);
+    setTaskItems(items);
   };
 
   return (
@@ -26,7 +34,11 @@ export default function App() {
         <Text style={styles.sectionTitle}>Today's Tasks</Text>
         <View style={styles.items}>
           {taskItems.length >= 0 &&
-            taskItems.map((item, index) => <Task key={index} text={item} />)}
+            taskItems.map((item, index) => (
+              <TouchableOpacity key={index} onPress={() => deleteTask(index)}>
+                <Task text={item} />
+              </TouchableOpacity>
+            ))}
         </View>
       </View>
       <KeyboardAvoidingView
